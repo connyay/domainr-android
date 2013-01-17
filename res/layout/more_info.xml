@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolsInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/toolsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Tools"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/whois"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="WHOIS" />
+
+            <Button
+                android:id="@+id/viewSite"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Site" />
+
+            <Button
+                android:id="@+id/share"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Save / Share" />
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/TldInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tldText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="TLD Info "
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/wiki"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Wikipedia" />
+
+            <Button
+                android:id="@+id/iana"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="IANA" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
