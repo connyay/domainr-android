@@ -60,7 +60,8 @@ public class Main extends ListActivity {
 	    public boolean onEditorAction(android.widget.TextView v,
 		    int actionId, KeyEvent event) {
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
-		    buildResults(queryBox.getText().toString());
+		    clearList();
+		    buildResults(queryBox.getText().toString());		    
 		}
 		return false;
 	    }
@@ -80,7 +81,7 @@ public class Main extends ListActivity {
 	queryBox.addTextChangedListener(new DelayedTextWatcher(800) {
 	    @Override
 	    public void afterTextChangedDelayed(Editable s) {
-		if (s.toString().length() > 1) {
+		if (s.toString().length() > 1) {		    
 		    buildResults(s.toString());
 		}
 	    }

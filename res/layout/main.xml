@@ -13,6 +13,7 @@
             android:id="@+id/queryBox"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/list_padding"
             android:layout_marginRight="@dimen/list_padding"
             android:ems="10"
