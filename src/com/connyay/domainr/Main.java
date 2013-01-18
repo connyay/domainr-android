@@ -1,6 +1,10 @@
 package com.connyay.domainr;
 
-import android.app.AlertDialog;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.ListActivity;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.ListView;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,13 +15,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -30,7 +29,9 @@ import com.connyay.domainr.gson.Results;
 import com.connyay.domainr.gson.ResultsData;
 import com.connyay.domainr.support.ResultsAdapter;
 
-public class Main extends SherlockListActivity {
+
+
+public class Main extends ListActivity {
     ListView mainListView;
     EditText queryBox;
     Button clear;
@@ -56,8 +57,8 @@ public class Main extends SherlockListActivity {
 	queryBox.setOnEditorActionListener(new OnEditorActionListener() {
 
 	    @Override
-	    public boolean onEditorAction(TextView v, int actionId,
-		    KeyEvent event) {
+	    public boolean onEditorAction(android.widget.TextView v,
+		    int actionId, KeyEvent event) {
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
 		    buildResults(queryBox.getText().toString());
 		}

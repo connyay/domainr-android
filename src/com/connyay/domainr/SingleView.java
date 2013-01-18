@@ -1,18 +1,17 @@
 package com.connyay.domainr;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
-import android.content.Context;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -23,19 +22,21 @@ import com.androidquery.callback.AjaxStatus;
 import com.connyay.domainr.gson.GsonTransformer;
 import com.connyay.domainr.gson.Result;
 import com.connyay.domainr.support.LoaderCustomSupport;
+import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * Demonstrates combining a TabHost with a ViewPager to implement a tab UI that
  * switches between tabs and also allows the user to perform horizontal flicks
  * to move between the tabs.
  */
-public class SingleView extends SherlockFragmentActivity {
+public class SingleView extends Activity {
     private AQuery aq = new AQuery(this);
     long expire = 60 * 60 * 1000;
 
-    TabHost mTabHost;
     ViewPager mViewPager;
-    TabsAdapter mTabsAdapter;
+    PagerAdapter mPagerAdapter;
+    TitlePageIndicator mTitleIndicator;
+
     Result res;
     TextView singleDomain, singlePreAvail, singleAvail;
 
@@ -51,11 +52,8 @@ public class SingleView extends SherlockFragmentActivity {
 	domain = intent.getStringExtra("domain");
 	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-	mTabHost = (TabHost) findViewById(android.R.id.tabhost);
-	mTabHost.setup();
-
 	if (savedInstanceState != null) {
-	    mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+
 	    domain = savedInstanceState.getString("domain");
 	}
 	singleDomain = (TextView) findViewById(R.id.single_domain);
@@ -68,7 +66,7 @@ public class SingleView extends SherlockFragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 	super.onSaveInstanceState(outState);
-	outState.putString("tab", mTabHost.getCurrentTabTag());
+
 	outState.putString("domain", domain);
     }
 
@@ -83,112 +81,44 @@ public class SingleView extends SherlockFragmentActivity {
 	return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This is a helper class that implements the management of tabs and all
-     * details of connecting a ViewPager with associated TabHost. It relies on a
-     * trick. Normally a tab host has a simple API for supplying a View or
-     * Intent that each tab will show. This is not sufficient for switching
-     * between pages. So instead we make the content part of the tab host 0dp
-     * high (it is not shown) and the TabsAdapter supplies its own dummy view to
-     * show as the tab content. It listens to changes in tabs, and takes care of
-     * switch to the correct paged in the ViewPager whenever the selected tab
-     * changes.
-     */
-    public static class TabsAdapter extends FragmentPagerAdapter implements
-	    TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
-	private final Context mContext;
-	private final TabHost mTabHost;
-	private final ViewPager mViewPager;
-	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+    public class PagerAdapter extends FragmentPagerAdapter {
+	protected final String[] TITLES = new String[] { "Register",
+		"More Info", };
 
-	static final class TabInfo {
-	    private final String tag;
-	    private final Class<?> clss;
-	    private final Bundle args;
+	private List<Fragment> fragments;
 
-	    TabInfo(String _tag, Class<?> _class, Bundle _args) {
-		tag = _tag;
-		clss = _class;
-		args = _args;
-	    }
+	/**
+	 * @param fm
+	 * @param fragments
+	 */
+	public PagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+	    super(fm);
+	    this.fragments = fragments;
 	}
 
-	static class DummyTabFactory implements TabHost.TabContentFactory {
-	    private final Context mContext;
-
-	    public DummyTabFactory(Context context) {
-		mContext = context;
-	    }
-
-	    @Override
-	    public View createTabContent(String tag) {
-		View v = new View(mContext);
-		v.setMinimumWidth(0);
-		v.setMinimumHeight(0);
-		return v;
-	    }
-	}
-
-	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-		ViewPager pager) {
-	    super(activity.getSupportFragmentManager());
-	    mContext = activity;
-	    mTabHost = tabHost;
-	    mViewPager = pager;
-	    mTabHost.setOnTabChangedListener(this);
-	    mViewPager.setAdapter(this);
-	    mViewPager.setOnPageChangeListener(this);
-	}
-
-	public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
-	    tabSpec.setContent(new DummyTabFactory(mContext));
-	    String tag = tabSpec.getTag();
-
-	    TabInfo info = new TabInfo(tag, clss, args);
-	    mTabs.add(info);
-	    mTabHost.addTab(tabSpec);
-	    notifyDataSetChanged();
-	}
-
-	@Override
-	public int getCount() {
-	    return mTabs.size();
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+	 */
 	@Override
 	public Fragment getItem(int position) {
-	    TabInfo info = mTabs.get(position);
-	    return Fragment.instantiate(mContext, info.clss.getName(),
-		    info.args);
+	    return this.fragments.get(position);
 	}
 
 	@Override
-	public void onTabChanged(String tabId) {
-	    int position = mTabHost.getCurrentTab();
-	    mViewPager.setCurrentItem(position);
+	public CharSequence getPageTitle(int position) {
+	    return this.TITLES[position];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.view.PagerAdapter#getCount()
+	 */
 	@Override
-	public void onPageScrolled(int position, float positionOffset,
-		int positionOffsetPixels) {
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-	    // Unfortunately when TabHost changes the current tab, it kindly
-	    // also takes care of putting focus on it when not in touch mode.
-	    // The jerk.
-	    // This hack tries to prevent this from pulling focus out of our
-	    // ViewPager.
-	    TabWidget widget = mTabHost.getTabWidget();
-	    int oldFocusability = widget.getDescendantFocusability();
-	    widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-	    mTabHost.setCurrentTab(position);
-	    widget.setDescendantFocusability(oldFocusability);
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int state) {
+	public int getCount() {
+	    return this.fragments.size();
 	}
     }
 
@@ -235,21 +165,27 @@ public class SingleView extends SherlockFragmentActivity {
 	    singleAvail.setText("Possibly Available.");
 	}
 
-	mViewPager = (ViewPager) findViewById(R.id.pager);
-	mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 	Bundle a = new Bundle();
 	a.putParcelableArray("regs", result.getRegistrars());
-	mTabsAdapter.addTab(
-		mTabHost.newTabSpec("register").setIndicator("Register"),
-		LoaderCustomSupport.RegistrarListFragment.class, a);
 	Bundle b = new Bundle();
 	b.putString("wiki", result.getTld().getWikipedia_url());
 	b.putString("iana", result.getTld().getIana_url());
 	b.putString("www", result.getWww_url());
 	b.putString("whois", result.getWhois_url());
 	b.putString("domain", result.getDomain());
-	mTabsAdapter.addTab(
-		mTabHost.newTabSpec("moreinfo").setIndicator("More Info"),
-		MoreInfoFragment.class, b);
+
+	List<Fragment> fragments = new Vector<Fragment>();
+
+	fragments.add(Fragment.instantiate(this,
+		LoaderCustomSupport.RegistrarListFragment.class.getName(), a));
+	fragments.add(Fragment.instantiate(this,
+		MoreInfoFragment.class.getName(), b));
+	mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
+
+	mViewPager = (ViewPager) findViewById(R.id.pager);
+	mViewPager.setAdapter(mPagerAdapter);
+	mTitleIndicator = (TitlePageIndicator) findViewById(R.id.titles);
+	mTitleIndicator.setViewPager(mViewPager);
+
     }
 }

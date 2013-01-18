@@ -1,24 +1,22 @@
 package com.connyay.domainr;
 
+import org.holoeverywhere.app.Fragment;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class MoreInfoFragment extends SherlockFragment implements
-	OnClickListener {
+public class MoreInfoFragment extends Fragment implements OnClickListener {
     Button wiki, iana, viewSite, whois, share;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-
+    public static Fragment newInstance() {
+	MoreInfoFragment myFragment = new MoreInfoFragment();
+	return myFragment;
     }
 
     @Override

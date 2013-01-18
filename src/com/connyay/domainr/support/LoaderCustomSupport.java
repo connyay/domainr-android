@@ -1,32 +1,26 @@
 package com.connyay.domainr.support;
 
+import org.holoeverywhere.app.ListFragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.connyay.domainr.R;
-import com.connyay.domainr.R.id;
-import com.connyay.domainr.R.layout;
 import com.connyay.domainr.gson.Registrars;
-import com.connyay.domainr.gson.Results;
-import com.connyay.domainr.gson.ResultsData;
 
 /**
  * Demonstration of the implementation of a custom Loader.
  */
-public class LoaderCustomSupport extends SherlockFragmentActivity {
+public class LoaderCustomSupport extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +72,7 @@ public class LoaderCustomSupport extends SherlockFragmentActivity {
 
     }
 
-    public static class RegistrarListFragment extends SherlockListFragment {
+    public static class RegistrarListFragment extends ListFragment {
 
 	// This is the Adapter being used to display the list's data.
 	RegistrarsAdapter mAdapter;

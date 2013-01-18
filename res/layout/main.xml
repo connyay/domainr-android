@@ -37,7 +37,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/domainr_blue"
         android:dividerHeight="1.0dp"
         android:paddingLeft="@dimen/list_padding"
         android:paddingRight="@dimen/list_padding" >
