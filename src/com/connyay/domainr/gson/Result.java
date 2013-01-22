@@ -8,7 +8,7 @@ public class Result {
     private String subdomain;
     private String path;
     private String availability;
-    private Tld tld; 
+    private Tld tld;
     // private String subdomains; -- Don't think this is currently used
     private String subregistration_permitted;
     private String www_url;

@@ -26,8 +26,8 @@
 
         <Button
             android:id="@+id/clear"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginBottom="3dp"
             android:layout_marginRight="23dp"

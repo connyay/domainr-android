@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.connyay.domainr.R;
 import com.connyay.domainr.SingleView;
+import com.connyay.domainr.common.FlurryLogger;
 import com.connyay.domainr.gson.ResultsData;
 
 @SuppressLint("ResourceAsColor")
@@ -46,7 +47,8 @@ public class ResultsAdapter extends ArrayAdapter<ResultsData> {
 	    } else if (availability.equals("taken")) {
 		available.setVisibility(View.INVISIBLE);
 
-	    } else if (availability.equals("tld") || availability.equals("unavailable")) {
+	    } else if (availability.equals("tld")
+		    || availability.equals("unavailable")) {
 		subdomain.setTextColor(getContext().getResources().getColor(
 			R.color.domainr_dark_grey));
 	    } else if (availability.equals("maybe")) {
@@ -60,13 +62,15 @@ public class ResultsAdapter extends ArrayAdapter<ResultsData> {
 	    public void onClick(View v) {
 
 		ResultsData result = getItem(position);
+		String selectedDomain = result.getDomain();
 		Intent viewIntent = new Intent(getContext(), SingleView.class);
-		viewIntent.putExtra("domain", result.getDomain());
+		viewIntent.putExtra("domain", selectedDomain);
+
+		FlurryLogger.logSearchTap(selectedDomain);
 
 		v.getContext().startActivity(viewIntent);
 	    }
 	});
 	return convertView;
     }
-
 }

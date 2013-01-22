@@ -1,18 +1,23 @@
 package com.connyay.domainr;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.LinearLayout;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-public class MoreInfoFragment extends Fragment implements OnClickListener {
-    Button wiki, iana, viewSite, whois, share;
+import com.connyay.domainr.common.FlurryLogger;
+
+public class MoreInfoFragment extends Fragment implements OnClickListener,
+	UncaughtExceptionHandler {
+    LinearLayout wiki, iana, viewSite, whois, share;
 
     public static Fragment newInstance() {
 	MoreInfoFragment myFragment = new MoreInfoFragment();
@@ -23,14 +28,16 @@ public class MoreInfoFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 	View v = inflater.inflate(R.layout.more_info, container, false);
-	wiki = (Button) v.findViewById(R.id.wiki);
+	wiki = (LinearLayout) v.findViewById(R.id.wiki);
 	wiki.setOnClickListener(this);
-	iana = (Button) v.findViewById(R.id.iana);
+	iana = (LinearLayout) v.findViewById(R.id.iana);
 	iana.setOnClickListener(this);
-	whois = (Button) v.findViewById(R.id.whois);
+	whois = (LinearLayout) v.findViewById(R.id.whois);
 	whois.setOnClickListener(this);
-	viewSite = (Button) v.findViewById(R.id.viewSite);
+	viewSite = (LinearLayout) v.findViewById(R.id.visitSite);
 	viewSite.setOnClickListener(this);
+	share = (LinearLayout) v.findViewById(R.id.share);
+	share.setOnClickListener(this);
 	return v;
     }
 
@@ -46,11 +53,32 @@ public class MoreInfoFragment extends Fragment implements OnClickListener {
 	} else if (v == whois) {
 	    uri = getArguments().getString("whois");
 	}
-	if (uri != null) {
+	if (uri != null && v != share) {
 	    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 		    Uri.parse(uri));
 	    startActivity(browserIntent);
+
 	}
+	if (v == share) {
+	    String domain = getArguments().getString("domain");
+	    String shareBody = "http://domai.nr/" + domain;
+	    FlurryLogger.logDomainShare(shareBody);
+	    Intent sharingIntent = new Intent(
+		    android.content.Intent.ACTION_SEND);
+	    sharingIntent.setType("text/plain");
+	    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+		    "Domain via Domai.nr");
+	    sharingIntent
+		    .putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+	    startActivity(Intent.createChooser(sharingIntent,
+		    "Share this domain"));
+	}
+
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+	FlurryLogger.logUncaught(ex.getMessage());
 
     }
 }

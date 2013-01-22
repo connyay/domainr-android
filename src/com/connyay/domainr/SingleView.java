@@ -1,24 +1,31 @@
 package com.connyay.domainr;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.Vector;
 
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.LinearLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.TabHost;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.connyay.domainr.common.FlurryLogger;
 import com.connyay.domainr.gson.GsonTransformer;
 import com.connyay.domainr.gson.Result;
 import com.connyay.domainr.support.LoaderCustomSupport;
@@ -29,7 +36,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  * switches between tabs and also allows the user to perform horizontal flicks
  * to move between the tabs.
  */
-public class SingleView extends Activity {
+public class SingleView extends Activity implements UncaughtExceptionHandler {
     private AQuery aq = new AQuery(this);
     long expire = 60 * 60 * 1000;
 
@@ -82,8 +89,7 @@ public class SingleView extends Activity {
     }
 
     public class PagerAdapter extends FragmentPagerAdapter {
-	protected final String[] TITLES = new String[] { "Register",
-		"More Info", };
+	protected String[] TITLES = new String[] { "Register", "More Info", };
 
 	private List<Fragment> fragments;
 
@@ -93,6 +99,8 @@ public class SingleView extends Activity {
 	 */
 	public PagerAdapter(FragmentManager fm, List<Fragment> fragments) {
 	    super(fm);
+	    if (fragments.size() == 1)
+		TITLES = new String[] { "More Info", };
 	    this.fragments = fragments;
 	}
 
@@ -141,6 +149,7 @@ public class SingleView extends Activity {
 		});
     }
 
+    @SuppressWarnings("deprecation")
     public void processResult(Result result) {
 
 	String availability = result.getAvailability();
@@ -149,10 +158,10 @@ public class SingleView extends Activity {
 		    R.color.domainr_green));
 	    singleAvail.setText("Available!");
 	} else if (availability.equals("taken")) {
-	    singleAvail.setTextColor(getResources().getColor(
-		    R.color.domainr_blue));
 	    singlePreAvail.setText("This domain is ");
 	    singleAvail.setText("taken.");
+
+	    checkForSale();
 
 	} else if (availability.equals("tld")
 		|| availability.equals("unavailable")) {
@@ -165,8 +174,15 @@ public class SingleView extends Activity {
 	    singleAvail.setText("Possibly Available.");
 	}
 
-	Bundle a = new Bundle();
-	a.putParcelableArray("regs", result.getRegistrars());
+	List<Fragment> fragments = new Vector<Fragment>();
+	if (availability.equals("available") || availability.equals("maybe")) {
+	    Bundle a = new Bundle();
+	    a.putParcelableArray("regs", result.getRegistrars());
+	    fragments.add(Fragment.instantiate(this,
+		    LoaderCustomSupport.RegistrarListFragment.class.getName(),
+		    a));
+	}
+
 	Bundle b = new Bundle();
 	b.putString("wiki", result.getTld().getWikipedia_url());
 	b.putString("iana", result.getTld().getIana_url());
@@ -174,10 +190,6 @@ public class SingleView extends Activity {
 	b.putString("whois", result.getWhois_url());
 	b.putString("domain", result.getDomain());
 
-	List<Fragment> fragments = new Vector<Fragment>();
-
-	fragments.add(Fragment.instantiate(this,
-		LoaderCustomSupport.RegistrarListFragment.class.getName(), a));
 	fragments.add(Fragment.instantiate(this,
 		MoreInfoFragment.class.getName(), b));
 	mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
@@ -187,5 +199,31 @@ public class SingleView extends Activity {
 	mTitleIndicator = (TitlePageIndicator) findViewById(R.id.titles);
 	mTitleIndicator.setViewPager(mViewPager);
 
+    }
+
+    public void checkForSale() {
+	LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	View v = vi.inflate(R.layout.forsale, null);
+	LinearLayout forSale = (LinearLayout) v.findViewById(R.id.forSale);
+
+	LinearLayout ll = (LinearLayout) findViewById(R.id.domainTopElement);
+	LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,
+		LayoutParams.WRAP_CONTENT);
+	ll.addView(v, lp);
+	forSale.setOnClickListener(new OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri
+			.parse("http://domai.nr/" + domain + "/buy"));
+		v.getContext().startActivity(browserIntent);
+
+	    }
+	});
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+	FlurryLogger.logUncaught(ex.getMessage());
     }
 }

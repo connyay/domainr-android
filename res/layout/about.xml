@@ -11,18 +11,18 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tldText"
+            android:id="@+id/aboutDmnr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:paddingLeft="10dp"
-            android:text="TLD Info "
+            android:text="About Domainr"
             android:textSize="25sp"
             android:textStyle="bold" />
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/TldInfo"
+            android:id="@+id/aboutTop"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -31,7 +31,7 @@
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/wiki"
+                android:id="@+id/mainTwitter"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/linear_border"
@@ -41,20 +41,13 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp" >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@drawable/wiki_icon" />
-
-                <TextView
+                <org.holoeverywhere.widget.TextView
                     android:id="@+id/textView1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".8"
-                    android:text="Wikipedia"
+                    android:text="Twitter"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
@@ -68,7 +61,7 @@
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/iana"
+                android:id="@+id/blog"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/linear_border_line"
@@ -78,20 +71,73 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp" >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@drawable/iana_icon" />
-
-                <TextView
+                <org.holoeverywhere.widget.TextView
                     android:id="@+id/textView1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".8"
-                    android:text="IANA"
+                    android:text="Blog"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight=".1"
+                    android:src="@drawable/ic_btn_search_go" />
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/github"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/linear_border_line"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp" >
+
+                <org.holoeverywhere.widget.TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight=".8"
+                    android:text="Licenses"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight=".1"
+                    android:src="@drawable/ic_btn_search_go" />
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/contactDmnr"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/linear_border_line"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp" >
+
+                <org.holoeverywhere.widget.TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight=".8"
+                    android:text="Contact Us"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
@@ -104,27 +150,27 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tldText"
+        <org.holoeverywhere.widget.TextView
+            android:id="@+id/boughtText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Tools"
+            android:text="Brought to you by..."
             android:textSize="25sp"
             android:textStyle="bold" />
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/TldInfo"
+            android:id="@+id/broughtToYouBy"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/linear_border"
             android:orientation="vertical" >
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/whois"
+                android:id="@+id/connyay"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/linear_border"
@@ -134,24 +180,17 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp" >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@drawable/magnifying_glass" />
-
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/TextView01"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".8"
-                    android:text="WHOIS"
+                    android:text="_connyay"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/ImageView01"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -161,7 +200,7 @@
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/visitSite"
+                android:id="@+id/case_twitter"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/linear_border_line"
@@ -171,24 +210,17 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp" >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@drawable/web" />
-
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/TextView01"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".8"
-                    android:text="Visit Site"
+                    android:text="case"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/ImageView01"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -198,7 +230,7 @@
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/share"
+                android:id="@+id/rr"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/linear_border_line"
@@ -208,24 +240,47 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp" >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@drawable/share" />
-
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/TextView02"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".8"
-                    android:text="Share"
+                    android:text="rr"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/ImageView02"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight=".1"
+                    android:src="@drawable/ic_btn_search_go" />
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ceedub"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/linear_border_line"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp" >
+
+                <TextView
+                    android:id="@+id/TextView01"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight=".8"
+                    android:text="ceedub"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <ImageView
+                    android:id="@+id/ImageView01"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

@@ -2,7 +2,7 @@ package com.connyay.domainr.gson;
 
 public class Results {
     private String query;
-    private ResultsData [] results;
+    private ResultsData[] results;
 
     public Results() {
     }

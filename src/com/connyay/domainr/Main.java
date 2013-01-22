@@ -1,11 +1,14 @@
 package com.connyay.domainr;
 
-import org.holoeverywhere.app.AlertDialog;
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import org.holoeverywhere.app.ListActivity;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.ListView;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -24,19 +27,20 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.connyay.domainr.common.DelayedTextWatcher;
+import com.connyay.domainr.common.FlurryLogger;
 import com.connyay.domainr.gson.GsonTransformer;
 import com.connyay.domainr.gson.Results;
 import com.connyay.domainr.gson.ResultsData;
 import com.connyay.domainr.support.ResultsAdapter;
+import com.flurry.android.FlurryAgent;
 
-
-
-public class Main extends ListActivity {
+public class Main extends ListActivity implements UncaughtExceptionHandler {
     ListView mainListView;
     EditText queryBox;
     Button clear;
     ResultsAdapter adapter;
     private AQuery aq;
+    String currentSearch = "";
 
     // cache for an hour
     long expire = 60 * 60 * 1000;
@@ -59,9 +63,12 @@ public class Main extends ListActivity {
 	    @Override
 	    public boolean onEditorAction(android.widget.TextView v,
 		    int actionId, KeyEvent event) {
-		if (actionId == EditorInfo.IME_ACTION_DONE) {
+		String search = queryBox.getText().toString()
+			.replaceAll("\\s", "");
+		if (actionId == EditorInfo.IME_ACTION_DONE
+			&& !search.equals(currentSearch)) {
 		    clearList();
-		    buildResults(queryBox.getText().toString());		    
+		    buildResults(search);
 		}
 		return false;
 	    }
@@ -81,8 +88,9 @@ public class Main extends ListActivity {
 	queryBox.addTextChangedListener(new DelayedTextWatcher(800) {
 	    @Override
 	    public void afterTextChangedDelayed(Editable s) {
-		if (s.toString().length() > 1) {		    
-		    buildResults(s.toString());
+		String search = s.toString();
+		if (search.length() > 1 && !search.equals(currentSearch)) {
+		    buildResults(s.toString().replaceAll("\\s", ""));
 		}
 	    }
 	});
@@ -115,37 +123,43 @@ public class Main extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
-	case R.id.menu_license:
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-	    // 2. Chain together various setter methods to set the dialog
-	    // characteristics
-	    builder.setMessage(R.string.Licenses);
-
-	    // 3. Get the AlertDialog from create()
-	    AlertDialog dialog = builder.create();
-	    dialog.show();
+	case R.id.menu_about:
+	    AboutDialog.newInstance().show(getSupportFragmentManager());
+	    return true;
+	case R.id.menu_share:
+	    FlurryLogger.logDomainrShare();
+	    String shareBody = "Check out Domainr: http://domai.nr";
+	    Intent sharingIntent = new Intent(
+		    android.content.Intent.ACTION_SEND);
+	    sharingIntent.setType("text/plain");
+	    sharingIntent
+		    .putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+	    startActivity(Intent.createChooser(sharingIntent, "Share Domai.nr"));
 	    return true;
 	}
 
 	return super.onOptionsItemSelected(item);
     }
 
-    public void buildResults(String query) {
+    public void buildResults(final String query) {
 	aq = new AQuery(this);
+
+	// log flurry search
+	FlurryLogger.logSearch(query);
+
 	// strip all whitespaces
-	query = query.replaceAll("\\s", "");
+
 	String url = "http://domai.nr/api/json/search?client_id=domainr-android&q="
 		+ query;
 	GsonTransformer t = new GsonTransformer();
 
-	aq.progress(R.id.progress).transformer(t).ajax(url, Results.class, expire,
-		new AjaxCallback<Results>() {
+	aq.progress(R.id.progress).transformer(t)
+		.ajax(url, Results.class, expire, new AjaxCallback<Results>() {
 		    public void callback(String url, Results results,
 			    AjaxStatus status) {
 			if (status.getCode() == 200) {
 			    // good response
-			    updateList(results);
+			    updateList(results, query);
 			}
 			if (status.getCode() == -101) {
 			    // bad response
@@ -156,10 +170,10 @@ public class Main extends ListActivity {
 		});
     }
 
-    public void updateList(Results results) {
+    public void updateList(Results results, String search) {
 	// clear list first
 	clearList();
-
+	currentSearch = search;
 	ResultsData[] resultsData = results.getResults();
 	for (int i = 0; i < resultsData.length; i++) {
 	    adapter.add(resultsData[i]);
@@ -168,8 +182,28 @@ public class Main extends ListActivity {
     }
 
     public void clearList() {
+	currentSearch = "";
 	adapter.clear();
 	adapter.notifyDataSetChanged();
+    }
+
+    // FLURRY!
+    @Override
+    protected void onStart() {
+	super.onStart();
+	FlurryAgent.onStartSession(this, getString(R.string.flurry_api_key));
+    }
+
+    @Override
+    protected void onStop() {
+	super.onStop();
+	FlurryAgent.onEndSession(this);
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+	FlurryLogger.logUncaught(ex.getMessage());
+
     }
 
 }
